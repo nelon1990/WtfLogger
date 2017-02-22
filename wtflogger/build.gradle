@@ -1,4 +1,8 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group = 'nelon1990'
+version = '1.0'
 
 android {
     compileSdkVersion 24
@@ -19,29 +23,6 @@ android {
 
 }
 
-
-ext {
-    /**
-     * 上傳到 Bintray 的一些配置
-     */
-    eRepo = 'hellospur/maven'
-    eName = "WtfLogger"
-    eArtifactId = 'WtfLogger'
-
-    eDescription = 'Android log'
-
-    eGroup = 'pers.nelon'
-    eVersion = '1.0.0'
-
-    eWebsiteUrl = 'https://coding.net/u/nelon/p/WtfLogger/git'
-    eVcsUrl = 'https://coding.net/u/nelon/p/WtfLogger/git/compare'
-    eVcsTag = 'v1.0' //git tag的名字,可以为空
-}
-
-/**
- * 上傳脚本
- */
-apply from: "upload.gradle"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])

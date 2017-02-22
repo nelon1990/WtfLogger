@@ -1,3 +1,5 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Android template
 # Built application files
 *.apk
 *.ap_
@@ -38,3 +40,7 @@ captures/
 
 # Keystore files
 *.jks
+*.idea/
+WtfLogger.iml
+/.idea
+/*.iml

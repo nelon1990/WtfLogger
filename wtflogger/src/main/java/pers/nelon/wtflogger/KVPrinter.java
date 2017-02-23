@@ -51,13 +51,10 @@ class KVPrinter extends AbstractPrinter<String> {
 
     public Logger listVal(List val) {
         Logger logger = getLogger();
-
         str += "\n";
-
         for (Object o : val) {
             str += "\t\t> " + val.indexOf(o) + ": " + o + "\n";
         }
-
         logger.addKvStr(str);
         return logger;
     }

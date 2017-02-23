@@ -13,14 +13,14 @@ import java.util.ArrayList;
  */
 public class WtfLog {
     private final static String TAG = WtfLog.class.getSimpleName();
-    private static String mTag;
+    private static String sTag;
 
-    private static ArrayList<String> filterList;
+    private static ArrayList<String> sFilterlist;
 
     /**
      * 表示是否反向过滤，默认false
      */
-    private static boolean reverseFilter;
+    private static boolean sReverseFilter;
 
     public final static Logger v = new Logger("v");
     public final static Logger i = new Logger("i");
@@ -30,26 +30,26 @@ public class WtfLog {
     public final static Logger wtf = new Logger("wtf");
 
     static {
-        if (filterList == null) {
-            filterList = new ArrayList<>();
+        if (sFilterlist == null) {
+            sFilterlist = new ArrayList<>();
         } else {
-            filterList.clear();
+            sFilterlist.clear();
         }
-        mTag = WtfLog.class.getSimpleName();
+        sTag = WtfLog.class.getSimpleName();
 
-        reverseFilter = false;
+        sReverseFilter = false;
     }
 
     public static void setTag(String tag) {
-        mTag = tag;
+        sTag = tag;
     }
 
     public static void filter(String tag) {
-        filterList.add(tag);
+        sFilterlist.add(tag);
     }
 
     public static void reverseFilter(boolean reverse) {
-        reverseFilter = reverse;
+        sReverseFilter = reverse;
     }
 
     static final class Logger {
@@ -71,6 +71,7 @@ public class WtfLog {
         private KVPrinter mKvPrinter;
         private BeanPrinter mBeanPrinter;
         private final static int DEFAULT_STACKTRACE_LINE = 10;
+        private JsonPrinter mJsonPrinter;
 
         private Logger(String type) {
             this.type = type;
@@ -90,19 +91,19 @@ public class WtfLog {
             return this;
         }
 
-        Logger tmpTag(String tag) {
+        public Logger tmpTag(String tag) {
             this.mTmpTag = tag;
             return this;
         }
 
-        Logger threadInfo() {
+        public Logger threadInfo() {
             Thread thread = Thread.currentThread();
             threadInfo += "\t> thread_id : " + thread.getId() + "\n";
             threadInfo += "\t> thread_name : " + thread.getName();
             return this;
         }
 
-        Logger stackTrace(int line) {
+        public Logger stackTrace(int line) {
             StackTraceElement[] stackElements = new Throwable().getStackTrace();
             if (stackElements != null) {
                 int length = stackElements.length > line ? line : stackElements.length;
@@ -125,7 +126,7 @@ public class WtfLog {
          * @param key 要打印的key
          * @return
          */
-        KVPrinter key(String key) {
+        public KVPrinter key(String key) {
             if (mKvPrinter == null) {
                 synchronized (WtfLog.class) {
                     if (mKvPrinter == null) {
@@ -153,11 +154,21 @@ public class WtfLog {
             return mBeanPrinter.parse();
         }
 
+        public Logger json(String pJson) {
+            if (mJsonPrinter == null) {
+                mJsonPrinter = new JsonPrinter(this, pJson);
+            } else {
+                mJsonPrinter.reset(pJson);
+            }
+            mJsonPrinter.parse();
+            return this;
+        }
+
         public void print() {
             String tmp = mTmpTag;
 
             if (tmp == null) {
-                tmp = mTag;
+                tmp = sTag;
             }
 
             if (tmp != null && !isFiltered(tmp)) {
@@ -240,14 +251,14 @@ public class WtfLog {
          * @return true-过滤，false-不过滤
          */
         private boolean isFiltered(String tmpTag) {
-            if (filterList != null) {
-                for (String tag : filterList) {
+            if (sFilterlist != null) {
+                for (String tag : sFilterlist) {
                     if (tag.equalsIgnoreCase(tmpTag)) {
-                        return !reverseFilter;
+                        return !sReverseFilter;
                     }
                 }
             }
-            return reverseFilter;
+            return sReverseFilter;
         }
 
         private void printLog(@NonNull String type, String tag, String msg) {

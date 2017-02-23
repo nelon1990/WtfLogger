@@ -5,19 +5,28 @@ package pers.nelon.wtflogger;
  * E-mail:libf@ppfuns.com
  * Package: com.ppfuns.wtflogger
  */
-public abstract class AbstractPrinter {
+abstract class AbstractPrinter<T> {
     public final static String TAG = AbstractPrinter.class.getSimpleName();
 
     private WtfLog.Logger mLogger;
 
-    public AbstractPrinter(WtfLog.Logger logger) {
+    AbstractPrinter(WtfLog.Logger logger) {
         mLogger = logger;
     }
 
-    protected WtfLog.Logger getLogger() {
-        WtfLog.Logger logger = mLogger;
-        mLogger = null;
-        return logger;
+    WtfLog.Logger getLogger() {
+        return mLogger;
     }
 
+    abstract void reset(T pT);
+
+    protected interface IPrinterLogger {
+        void addKvStr(String kv);
+
+        void addJsonStr(String json);
+
+        void addXmlStr(String xmlStr);
+
+        void addBeanStr(String beanStr);
+    }
 }

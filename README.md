@@ -2,6 +2,7 @@
 
 [![](https://jitpack.io/v/nelon1990/WtfLogger.svg)](https://jitpack.io/#nelon1990/WtfLogger)
 
+Step 1. Add the JitPack repository to your build file.
 Add it in your root build.gradle at the end of repositories:
 
 	allprojects {

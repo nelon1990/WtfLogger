@@ -11,8 +11,8 @@ import java.util.ArrayList;
  * E-mail:libf@ppfuns.com
  * Package: com.ppfuns.wtflogger
  */
-public class WtfLog {
-    public final static String TAG = WtfLog.class.getSimpleName();
+class WtfLog {
+    private final static String TAG = WtfLog.class.getSimpleName();
     private static String mTag;
 
     private static ArrayList<String> filterList;
@@ -22,12 +22,12 @@ public class WtfLog {
      */
     private static boolean reverseFilter;
 
-    public static Logger v = new Logger("v");
-    public static Logger i = new Logger("i");
-    public static Logger d = new Logger("d");
-    public static Logger w = new Logger("w");
-    public static Logger e = new Logger("e");
-    public static Logger wtf = new Logger("wtf");
+    final static Logger v = new Logger("v");
+    final static Logger i = new Logger("i");
+    final static Logger d = new Logger("d");
+    final static Logger w = new Logger("w");
+    final static Logger e = new Logger("e");
+    final static Logger wtf = new Logger("wtf");
 
     static {
         if (filterList == null) {
@@ -52,7 +52,7 @@ public class WtfLog {
         reverseFilter = reverse;
     }
 
-    public static class Logger {
+    static final class Logger {
         private StringBuilder mStringBuilder;
 
         private String type;
@@ -68,8 +68,11 @@ public class WtfLog {
         private String json;
         private String xml;
         private String bean;
+        private KVPrinter mKvPrinter;
+        private BeanPrinter mBeanPrinter;
+        private final static int DEFAULT_STACKTRACE_LINE = 10;
 
-        public Logger(String type) {
+        private Logger(String type) {
             this.type = type;
             this.mStringBuilder = new StringBuilder();
 
@@ -87,31 +90,34 @@ public class WtfLog {
             return this;
         }
 
-        public Logger tmpTag(String tag) {
+        Logger tmpTag(String tag) {
             this.mTmpTag = tag;
             return this;
         }
 
-        public Logger threadInfo() {
+        Logger threadInfo() {
             Thread thread = Thread.currentThread();
             threadInfo += "\t> thread_id : " + thread.getId() + "\n";
             threadInfo += "\t> thread_name : " + thread.getName();
             return this;
         }
 
-        public Logger stackTrace() {
-
+        Logger stackTrace(int line) {
             StackTraceElement[] stackElements = new Throwable().getStackTrace();
             if (stackElements != null) {
-                int length = stackElements.length > 5 ? 5 : stackElements.length;
+                int length = stackElements.length > line ? line : stackElements.length;
                 for (int i = 0; i < length; i++) {
                     stackTrace += "\t> " + stackElements[i] + "\n";
                 }
                 stackTrace += "\t> " + "....";
             }
-
             return this;
         }
+
+        public Logger stackTrace() {
+            return stackTrace(DEFAULT_STACKTRACE_LINE);
+        }
+
 
         /**
          * K-V形式的打印
@@ -119,8 +125,17 @@ public class WtfLog {
          * @param key 要打印的key
          * @return
          */
-        public KVPrinter key(String key) {
-            return new KVPrinter(this, key);
+        KVPrinter key(String key) {
+            if (mKvPrinter == null) {
+                synchronized (WtfLog.class) {
+                    if (mKvPrinter == null) {
+                        mKvPrinter = new KVPrinter(this, key);
+                    }
+                }
+            } else {
+                mKvPrinter.reset(key);
+            }
+            return mKvPrinter;
         }
 
         /**
@@ -130,8 +145,12 @@ public class WtfLog {
          * @return
          */
         public Logger bean(Object bean) {
-            new BeanPrinter(this, bean).parse();
-            return this;
+            if (mBeanPrinter == null) {
+                mBeanPrinter = new BeanPrinter(this, bean);
+            } else {
+                mBeanPrinter.reset(bean);
+            }
+            return mBeanPrinter.parse();
         }
 
         public void print() {
@@ -195,9 +214,11 @@ public class WtfLog {
                 /**
                  * 打印log
                  */
-                printLog(type, tmp, mStringBuilder.toString());
+                synchronized (WtfLog.class) {
+                    printLog(type, tmp, mStringBuilder.toString());
+                    clear();
+                }
             }
-            clear();
         }
 
         private void clear() {
@@ -221,7 +242,7 @@ public class WtfLog {
         private boolean isFiltered(String tmpTag) {
             if (filterList != null) {
                 for (String tag : filterList) {
-                    if (tag.equals(tmpTag)) {
+                    if (tag.equalsIgnoreCase(tmpTag)) {
                         return !reverseFilter;
                     }
                 }
@@ -253,19 +274,19 @@ public class WtfLog {
             }
         }
 
-        protected void addKvStr(String kvStr) {
+        void addKvStr(String kvStr) {
             kv += kvStr;
         }
 
-        protected void addJsonStr(String jsonStr) {
+        void addJsonStr(String jsonStr) {
             json += jsonStr;
         }
 
-        protected void addXmlStr(String xmlStr) {
+        void addXmlStr(String xmlStr) {
             xml += xmlStr;
         }
 
-        protected void addBeanStr(String beanStr) {
+        void addBeanStr(String beanStr) {
             bean += beanStr;
         }
     }

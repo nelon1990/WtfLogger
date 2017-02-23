@@ -3,7 +3,6 @@ package pers.nelon.wtflogger;
 import android.text.TextUtils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,18 +14,20 @@ import static pers.nelon.wtflogger.WtfLog.Logger;
  * E-mail:libf@ppfuns.com
  * Package: com.ppfuns.wtflogger
  */
-public class BeanPrinter extends AbstractPrinter {
+class BeanPrinter extends AbstractPrinter<Object> {
     public final static String TAG = BeanPrinter.class.getSimpleName();
-    private final Object mBean;
+    private Object mBean;
 
-    public BeanPrinter(Logger logger, Object bean) {
+    BeanPrinter(Logger logger, Object bean) {
         super(logger);
         mBean = bean;
     }
 
-    public void parse() {
+    Logger parse() {
         String bean = parseBean(mBean);
-        getLogger().addBeanStr(bean);
+        Logger logger = getLogger();
+        logger.addBeanStr(bean);
+        return logger;
     }
 
     private String parseBean(Object bean) {
@@ -64,8 +65,8 @@ public class BeanPrinter extends AbstractPrinter {
                     fieldName = fieldName.toLowerCase().charAt(0) + fieldName.substring(1);
                     iteratedFieldList.add(fieldName);
                     beanVal += "\t\t\t> " + fieldName + " : " + invoke + "\n";
-                } catch (IllegalAccessException | InvocationTargetException e1) {
-                    e1.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -101,4 +102,8 @@ public class BeanPrinter extends AbstractPrinter {
     }
 
 
+    @Override
+    void reset(Object pT) {
+        mBean = pT;
+    }
 }

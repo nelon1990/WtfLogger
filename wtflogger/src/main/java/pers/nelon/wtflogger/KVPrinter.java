@@ -1,27 +1,34 @@
 package pers.nelon.wtflogger;
 
-import pers.nelon.wtflogger.WtfLog.Logger;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import pers.nelon.wtflogger.WtfLog.Logger;
 
 /**
  * Created by 李冰锋 on 2016/9/8 9:28.
  * E-mail:libf@ppfuns.com
  * Package: com.ppfuns.wtflogger
  */
-public class KVPrinter extends AbstractPrinter {
+class KVPrinter extends AbstractPrinter<String> {
     public final static String TAG = KVPrinter.class.getSimpleName();
 
     private String str;
 
-    public KVPrinter(Logger logger, String key) {
+    KVPrinter(Logger logger, String key) {
         super(logger);
         str = "\t>  " + key + " : ";
     }
 
     public Logger intVal(int val) {
+        Logger logger = getLogger();
+        str += val + "\n";
+        logger.addKvStr(str);
+        return logger;
+    }
+
+    public Logger longVal(long val) {
         Logger logger = getLogger();
         str += val + "\n";
         logger.addKvStr(str);
@@ -78,6 +85,11 @@ public class KVPrinter extends AbstractPrinter {
 
         logger.addKvStr(str);
         return logger;
+    }
+
+    @Override
+    protected void reset(String pT) {
+        str = "\t>  " + pT + " : ";
     }
 
 }

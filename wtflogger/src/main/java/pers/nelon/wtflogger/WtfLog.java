@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * E-mail:libf@ppfuns.com
  * Package: com.ppfuns.wtflogger
  */
-class WtfLog {
+public class WtfLog {
     private final static String TAG = WtfLog.class.getSimpleName();
     private static String mTag;
 

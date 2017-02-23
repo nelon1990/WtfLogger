@@ -22,12 +22,12 @@ public class WtfLog {
      */
     private static boolean reverseFilter;
 
-    final static Logger v = new Logger("v");
-    final static Logger i = new Logger("i");
-    final static Logger d = new Logger("d");
-    final static Logger w = new Logger("w");
-    final static Logger e = new Logger("e");
-    final static Logger wtf = new Logger("wtf");
+    public final static Logger v = new Logger("v");
+    public final static Logger i = new Logger("i");
+    public final static Logger d = new Logger("d");
+    public final static Logger w = new Logger("w");
+    public final static Logger e = new Logger("e");
+    public final static Logger wtf = new Logger("wtf");
 
     static {
         if (filterList == null) {

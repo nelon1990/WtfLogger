@@ -11,7 +11,7 @@ import pers.nelon.wtflogger.WtfLog.Logger;
  * E-mail:libf@ppfuns.com
  * Package: com.ppfuns.wtflogger
  */
-class KVPrinter extends AbstractPrinter<String> {
+public class KVPrinter extends AbstractPrinter<String> {
     public final static String TAG = KVPrinter.class.getSimpleName();
 
     private String str;

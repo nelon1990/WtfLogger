@@ -14,7 +14,7 @@ import static pers.nelon.wtflogger.WtfLog.Logger;
  * E-mail:libf@ppfuns.com
  * Package: com.ppfuns.wtflogger
  */
-class BeanPrinter extends AbstractPrinter<Object> {
+public class BeanPrinter extends AbstractPrinter<Object> {
     public final static String TAG = BeanPrinter.class.getSimpleName();
     private Object mBean;
 

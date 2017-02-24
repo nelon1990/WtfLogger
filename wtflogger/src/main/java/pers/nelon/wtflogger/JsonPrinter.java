@@ -13,7 +13,7 @@ import pers.nelon.wtflogger.WtfLog.Logger;
  * E-mail:libf@ppfuns.com
  * Package: com.ppfuns.wtflogger
  */
-class JsonPrinter extends AbstractPrinter<String> {
+public class JsonPrinter extends AbstractPrinter<String> {
     public final static String TAG = JsonPrinter.class.getSimpleName();
 
     private static final int DEFAULT = 2;

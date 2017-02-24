@@ -51,7 +51,7 @@ public class WtfLog {
         sReverseFilter = reverse;
     }
 
-    static final class Logger {
+    public static final class Logger {
         private StringBuilder mStringBuilder;
 
         private String type;

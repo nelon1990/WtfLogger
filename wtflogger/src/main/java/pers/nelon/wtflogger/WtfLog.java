@@ -1,6 +1,5 @@
 package pers.nelon.wtflogger;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -261,7 +260,7 @@ public class WtfLog {
             return sReverseFilter;
         }
 
-        private void printLog(@NonNull String type, String tag, String msg) {
+        private void printLog(String type, String tag, String msg) {
             msg += "\n";
             switch (type) {
                 case "v":

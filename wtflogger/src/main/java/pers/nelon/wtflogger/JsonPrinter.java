@@ -1,7 +1,5 @@
 package pers.nelon.wtflogger;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +17,7 @@ class JsonPrinter extends AbstractPrinter<String> {
     public final static String TAG = JsonPrinter.class.getSimpleName();
 
     private static final int DEFAULT = 2;
+    private final String s = createIndent(DEFAULT - 1) + ">";
     private String jsonStr;
     private StringBuilder mStringBuilder;
     private int mIndentNum;
@@ -27,6 +26,7 @@ class JsonPrinter extends AbstractPrinter<String> {
         super(logger);
         jsonStr = json;
         mStringBuilder = new StringBuilder();
+        mStringBuilder.append(s);
         mIndentNum = DEFAULT;
     }
 
@@ -35,6 +35,7 @@ class JsonPrinter extends AbstractPrinter<String> {
         jsonStr = pS;
         mIndentNum = DEFAULT;
         mStringBuilder = new StringBuilder();
+        mStringBuilder.append(s);
     }
 
     public void parse() {
@@ -63,27 +64,25 @@ class JsonPrinter extends AbstractPrinter<String> {
     private void recursiveParseArray(int pIndentNum, JSONArray pJsonArray) {
         mStringBuilder.append("[")
                 .append("\n")
+                .append(s)
                 .append(createIndent(pIndentNum));
-        Log.d(TAG, "start: " + pIndentNum);
 
         for (int i = 0; i < pJsonArray.length(); i++) {
             try {
                 String endFix;
 
                 if (i == pJsonArray.length() - 1) {
-                    endFix = "\n";
+                    endFix = "\n" + s;
                 } else {
-                    endFix = "," + "\n" + createIndent(pIndentNum);
+                    endFix = "," + "\n" + s + createIndent(pIndentNum);
                 }
 
                 Object o = pJsonArray.get(i);
                 if (o instanceof JSONArray) {
-                    // FIXME: 2017/2/23 直接++，在数组有多个元素时，会有问题
-                    recursiveParseArray(mIndentNum++, (JSONArray) o);
+                    recursiveParseArray(pIndentNum + 1, (JSONArray) o);
                     mStringBuilder.append(endFix);
                 } else if (o instanceof JSONObject) {
-                    // FIXME: 2017/2/23 直接++，在数组有多个元素时，会有问题
-                    recursiveParseObject(mIndentNum++, (JSONObject) o);
+                    recursiveParseObject(pIndentNum + 1, (JSONObject) o);
                     mStringBuilder.append(endFix);
                 } else {
                     parseSingle(o);
@@ -95,14 +94,13 @@ class JsonPrinter extends AbstractPrinter<String> {
         }
         mStringBuilder.append(createIndent(pIndentNum - 1))
                 .append("]");
-        Log.d(TAG, "end: " + pIndentNum);
     }
 
     private void recursiveParseObject(int pIndentNum, JSONObject pJsonObject) {
         mStringBuilder.append("{")
                 .append("\n")
+                .append(s)
                 .append(createIndent(pIndentNum));
-        Log.d(TAG, "start: " + pIndentNum);
 
         Iterator<String> keys = pJsonObject.keys();
         while (keys.hasNext()) {
@@ -111,20 +109,18 @@ class JsonPrinter extends AbstractPrinter<String> {
             String endFix;
 
             if (keys.hasNext()) {
-                endFix = "," + "\n" + createIndent(pIndentNum);
+                endFix = "," + "\n" + s + createIndent(pIndentNum);
             } else {
-                endFix = "\n";
+                endFix = "\n" + s;
             }
 
             try {
                 Object o = pJsonObject.get(key);
                 if (o instanceof JSONArray) {
-                    // FIXME: 2017/2/23 直接++，在数组有多个元素时，会有问题
-                    recursiveParseArray(mIndentNum++, (JSONArray) o);
+                    recursiveParseArray(pIndentNum + 1, (JSONArray) o);
                     mStringBuilder.append(endFix);
                 } else if (o instanceof JSONObject) {
-                    // FIXME: 2017/2/23 直接++，在数组有多个元素时，会有问题
-                    recursiveParseObject(mIndentNum++, (JSONObject) o);
+                    recursiveParseObject(pIndentNum + 1, (JSONObject) o);
                     mStringBuilder.append(endFix);
                 } else {
                     parseSingle(o);
@@ -137,7 +133,6 @@ class JsonPrinter extends AbstractPrinter<String> {
 
         mStringBuilder.append(createIndent(pIndentNum - 1))
                 .append("}");
-        Log.d(TAG, "end: " + pIndentNum);
     }
 
 

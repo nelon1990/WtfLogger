@@ -17,7 +17,7 @@ public class JsonPrinter extends AbstractPrinter<String> {
     public final static String TAG = JsonPrinter.class.getSimpleName();
 
     private static final int DEFAULT = 2;
-    private final String s = createIndent(DEFAULT - 1) + ">";
+    private final String mPrefix = createIndent(DEFAULT) + ">";
     private String jsonStr;
     private StringBuilder mStringBuilder;
     private int mIndentNum;
@@ -26,7 +26,7 @@ public class JsonPrinter extends AbstractPrinter<String> {
         super(logger);
         jsonStr = json;
         mStringBuilder = new StringBuilder();
-        mStringBuilder.append(s);
+        mStringBuilder.append(mPrefix);
         mIndentNum = DEFAULT;
     }
 
@@ -35,7 +35,7 @@ public class JsonPrinter extends AbstractPrinter<String> {
         jsonStr = pS;
         mIndentNum = DEFAULT;
         mStringBuilder = new StringBuilder();
-        mStringBuilder.append(s);
+        mStringBuilder.append(mPrefix);
     }
 
     public void parse() {
@@ -64,7 +64,7 @@ public class JsonPrinter extends AbstractPrinter<String> {
     private void recursiveParseArray(int pIndentNum, JSONArray pJsonArray) {
         mStringBuilder.append("[")
                 .append("\n")
-                .append(s)
+                .append(mPrefix)
                 .append(createIndent(pIndentNum));
 
         for (int i = 0; i < pJsonArray.length(); i++) {
@@ -72,9 +72,9 @@ public class JsonPrinter extends AbstractPrinter<String> {
                 String endFix;
 
                 if (i == pJsonArray.length() - 1) {
-                    endFix = "\n" + s;
+                    endFix = "\n" + mPrefix;
                 } else {
-                    endFix = "," + "\n" + s + createIndent(pIndentNum);
+                    endFix = "," + "\n" + mPrefix + createIndent(pIndentNum);
                 }
 
                 Object o = pJsonArray.get(i);
@@ -99,7 +99,7 @@ public class JsonPrinter extends AbstractPrinter<String> {
     private void recursiveParseObject(int pIndentNum, JSONObject pJsonObject) {
         mStringBuilder.append("{")
                 .append("\n")
-                .append(s)
+                .append(mPrefix)
                 .append(createIndent(pIndentNum));
 
         Iterator<String> keys = pJsonObject.keys();
@@ -109,9 +109,9 @@ public class JsonPrinter extends AbstractPrinter<String> {
             String endFix;
 
             if (keys.hasNext()) {
-                endFix = "," + "\n" + s + createIndent(pIndentNum);
+                endFix = "," + "\n" + mPrefix + createIndent(pIndentNum);
             } else {
-                endFix = "\n" + s;
+                endFix = "\n" + mPrefix;
             }
 
             try {

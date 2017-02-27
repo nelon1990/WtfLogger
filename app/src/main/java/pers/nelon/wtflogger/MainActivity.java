@@ -25,35 +25,23 @@ public class MainActivity extends AppCompatActivity {
 
         String json = "{\"glossary\":{\"title\":\"example glossary\",\"GlossDiv\":{\"title\":\"S\",\"GlossList\":{\"GlossEntry\":{\"ID\":\"SGML\",\"SortAs\":\"SGML\",\"GlossTerm\":\"Standard Generalized Markup Language\",\"Acronym\":\"SGML\",\"Abbrev\":\"ISO 8879:1986\",\"GlossDef\":{\"para\":\"A meta-markup language, used to create markup languages such as DocBook.\",\"GlossSeeAlso\":[\"GML\",\"XML\"]},\"GlossSee\":\"markup\"}}}}}";
 
-        WtfLog.d.title("示例")
-                .tmpTag("json")
-                .json(json)
-                .print();
-
-        WtfLog.d.title("示例")
-                .tmpTag(TAG)
-                .key("key1").intVal(1)
-                .key("key2").stringVal("string1")
-                .key("key2").floatVal(3.5f)
-                .key("map").mapVal(map)
-                .key("list").listVal(Arrays.asList(1, 2, 3, 4))
-                .print();
-
         User user = new User();
         user.username = "nelon";
         user.password = "123456";
 
-        WtfLog.d.title("示例")
-                .tmpTag(TAG)
-                .bean(user)
-                .print();
-
-        WtfLog.d.title("示例")
-                .tmpTag(TAG)
-                .stackTrace()
+        WtfLog.d.tmpTag("demo")
+                .title("title")
+                .msg("这是一条很长很长的消息\n这是一条很长很长的消息\n这是一条很长很长的消息")
+                .date()
                 .threadInfo()
+                .stackTrace()
+                .bean(user)
+                .key("key").stringVal("val")
+                .key("map").mapVal(map)
+                .key("list").listVal(Arrays.asList("a", "b", "c", "d", "e", "f"))
+                .json("APP黑名单", json)
+                .json("json2", json)
                 .print();
-
     }
 
 

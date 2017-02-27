@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by 李冰锋 on 2016/9/7 16:35.
@@ -52,6 +53,8 @@ public class WtfLog {
     }
 
     public static final class Logger {
+        private final static int DEFAULT_STACKTRACE_LINE = 10;
+
         private StringBuilder mStringBuilder;
 
         private String type;
@@ -67,15 +70,16 @@ public class WtfLog {
         private String json;
         private String xml;
         private String bean;
+        private String date;
+        private String msg;
         private KVPrinter mKvPrinter;
         private BeanPrinter mBeanPrinter;
-        private final static int DEFAULT_STACKTRACE_LINE = 10;
         private JsonPrinter mJsonPrinter;
+        private Date mDate = new Date();
 
         private Logger(String type) {
             this.type = type;
             this.mStringBuilder = new StringBuilder();
-
             this.title = "";
             this.threadInfo = "";
             this.stackTrace = "";
@@ -91,7 +95,7 @@ public class WtfLog {
         }
 
         public Logger tmpTag(String tag) {
-            this.mTmpTag = tag;
+            this.mTmpTag = "WtfLogger_" + tag;
             return this;
         }
 
@@ -107,6 +111,9 @@ public class WtfLog {
             if (stackElements != null) {
                 int length = stackElements.length > line ? line : stackElements.length;
                 for (int i = 0; i < length; i++) {
+                    if (stackElements[i].getClassName().equals(this.getClass().getName())) {
+                        continue;
+                    }
                     stackTrace += "\t> " + stackElements[i] + "\n";
                 }
                 stackTrace += "\t> " + "....";
@@ -138,6 +145,17 @@ public class WtfLog {
             return mKvPrinter;
         }
 
+        public Logger date() {
+            mDate.setTime(System.currentTimeMillis());
+            date = "\t" + mDate.toString();
+            return this;
+        }
+
+        public Logger msg(String pMsg) {
+            msg = "\t" + pMsg.replace("\n", "\n\t");
+            return this;
+        }
+
         /**
          * 以对具有getter的bean进行打印
          *
@@ -153,12 +171,14 @@ public class WtfLog {
             return mBeanPrinter.parse();
         }
 
-        public Logger json(String pJson) {
+        public Logger json(String pJsonTitle, String pJson) {
             if (mJsonPrinter == null) {
                 mJsonPrinter = new JsonPrinter(this, pJson);
             } else {
                 mJsonPrinter.reset(pJson);
             }
+            json += "\t> " + pJsonTitle + " :\n";
+
             mJsonPrinter.parse();
             return this;
         }
@@ -177,6 +197,20 @@ public class WtfLog {
                         title = title.substring(0, title.length() - 1);
                     }
                     mStringBuilder.append("[Title]:\n").append(title).append("\n");
+                }
+
+                if (!TextUtils.isEmpty(date)) {
+                    if (date.endsWith("\n")) {
+                        date = date.substring(0, date.length() - 1);
+                    }
+                    mStringBuilder.append("[Date]:\n").append(date).append("\n");
+                }
+
+                if (!TextUtils.isEmpty(msg)) {
+                    if (msg.endsWith("\n")) {
+                        title = title.substring(0, msg.length() - 1);
+                    }
+                    mStringBuilder.append("[Msg]:\n").append(msg).append("\n");
                 }
 
                 if (!TextUtils.isEmpty(threadInfo)) {
@@ -241,6 +275,8 @@ public class WtfLog {
             bean = "";
             mStringBuilder = new StringBuilder();
             mTmpTag = "";
+            date = "";
+            msg = "";
         }
 
         /**

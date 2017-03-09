@@ -6,7 +6,7 @@ version = '1.0'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         minSdkVersion 14
@@ -27,5 +27,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
+    compile 'org.dom4j:dom4j:2.0.0'
 }
 

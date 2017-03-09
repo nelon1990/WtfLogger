@@ -6,8 +6,7 @@
 链式调用
 ###### K-V打印
 
-    WtfLog.d.title("示例")
-            .tmpTag(TAG)
+    WtfLog.d.msg("this is msg")
             .key("key1").intVal(1)
             .key("key2").stringVal("string1")
             .key("key2").floatVal(3.5f)
@@ -16,20 +15,6 @@
             .print();
 
 ![](http://p1.bpimg.com/567571/c8705631d14a9466.png)
-
-###### bean打印
-
-    public class User {
-        String username;
-        String password;
-    }
-
-    WtfLog.d.title("示例")
-            .tmpTag(TAG)
-            .bean(user)
-            .print();
-
-![](http://p1.bqimg.com/567571/e6e05133e2e62ac5.png)
 
 ###### 线程与堆栈打印
     WtfLog.d.title("示例")

@@ -43,5 +43,5 @@
 >Step 2. module的gradle脚本中，增加下方依赖
 
 	dependencies {
-	        compile 'com.github.nelon1990:WtfLogger:v1.0.2'
+	        compile 'com.github.nelon1990:WtfLogger:v0.1.0'
 	}

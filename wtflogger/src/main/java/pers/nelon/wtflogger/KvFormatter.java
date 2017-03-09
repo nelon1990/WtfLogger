@@ -10,7 +10,7 @@ import java.util.Map;
  * Package: pers.nelon.wtflogger.refactor
  */
 
-public class KvFormatter {
+class KvFormatter {
 
     public final static String TAG = KvFormatter.class.getSimpleName();
 
@@ -19,11 +19,11 @@ public class KvFormatter {
     private static final String NEW_LINE = "\n";
 
 
-    public static String simpleVal(String pKey, Object val) {
+    static String simpleVal(String pKey, Object val) {
         return PREFIX + pKey + SEPERATE + val;
     }
 
-    public static String listVal(String pKey, List val) {
+    static String listVal(String pKey, List val) {
         String str = PREFIX + pKey + SEPERATE +
                 NEW_LINE;
         for (Object o : val) {
@@ -33,11 +33,11 @@ public class KvFormatter {
         return str;
     }
 
-    public static String arrayVal(String pKey, Object[] val) {
+    static String arrayVal(String pKey, Object[] val) {
         return listVal(pKey, Arrays.asList(val));
     }
 
-    public static String mapVal(String pKey, Map val) {
+    static String mapVal(String pKey, Map val) {
         String str = PREFIX + pKey + SEPERATE +
                 NEW_LINE;
 

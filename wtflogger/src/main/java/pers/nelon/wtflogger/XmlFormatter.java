@@ -15,11 +15,11 @@ import java.io.StringWriter;
  * Package: pers.nelon.wtflogger.refactor
  */
 
-public class XmlFormatter {
-    private static String INTENT = "\t";
+class XmlFormatter {
+    private static final String INTENT = "\t";
 
-    public static String format(String pXml) {
-        String result = "";
+    static String format(String pXml) {
+        String result = "INVAIL XML";
         try {
             Document document = DocumentHelper.parseText(pXml);
             OutputFormat prettyPrint = OutputFormat.createPrettyPrint();
@@ -30,7 +30,7 @@ public class XmlFormatter {
 
             result = stringWriter.toString();
             result = INTENT + result.replaceAll("\n", "\n" + INTENT);
-
+            result = result.substring(0, result.lastIndexOf("\n"));
         } catch (DocumentException | IOException pE) {
             pE.printStackTrace();
         }

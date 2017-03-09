@@ -11,34 +11,36 @@ import java.util.Iterator;
  * E-mail:libf@ppfuns.com
  * Package: pers.nelon.wtflogger.refactor
  */
-public class JsonFormatter {
+class JsonFormatter {
     public final static String TAG = JsonFormatter.class.getSimpleName();
-    private static int mIndentNum = 2;
-    private static String mPrefix = "";
+
+    private static final int INDENT = 1;
+    private static final String PREFIX = "";
 
     static String format(String unFormatted) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             JSONObject jsonObject = new JSONObject(unFormatted);
-            stringBuilder.append(createIndent(mIndentNum - 1));
-            recursiveParseObject(mIndentNum++, jsonObject, stringBuilder);
+            stringBuilder.append(createIndent(INDENT - 1));
+            recursiveParseObject(INDENT + 1, jsonObject, stringBuilder);
         } catch (JSONException pE) {
             pE.printStackTrace();
             try {
                 JSONArray jsonArray = new JSONArray(unFormatted);
-                stringBuilder.append(createIndent(mIndentNum - 1));
-                recursiveParseArray(mIndentNum++, jsonArray, stringBuilder);
+                stringBuilder.append(createIndent(INDENT - 1));
+                recursiveParseArray(INDENT + 1, jsonArray, stringBuilder);
             } catch (JSONException pE1) {
                 pE1.printStackTrace();
+                stringBuilder = new StringBuilder("INVAIL JSON");
             }
         }
-        return stringBuilder.toString();
+        return createIndent(INDENT == 1 ? 1 : INDENT - 1) + stringBuilder.toString();
     }
 
     private static void recursiveParseArray(int pIndentNum, JSONArray pJsonArray, StringBuilder pStringBuilder) {
         pStringBuilder.append("[")
                 .append("\n")
-                .append(mPrefix)
+                .append(PREFIX)
                 .append(createIndent(pIndentNum));
 
         for (int i = 0; i < pJsonArray.length(); i++) {
@@ -46,9 +48,9 @@ public class JsonFormatter {
                 String endFix;
 
                 if (i == pJsonArray.length() - 1) {
-                    endFix = "\n" + mPrefix;
+                    endFix = "\n" + PREFIX;
                 } else {
-                    endFix = "," + "\n" + mPrefix + createIndent(pIndentNum);
+                    endFix = "," + "\n" + PREFIX + createIndent(pIndentNum);
                 }
 
                 Object o = pJsonArray.get(i);
@@ -73,7 +75,7 @@ public class JsonFormatter {
     private static void recursiveParseObject(int pIndentNum, JSONObject pJsonObject, StringBuilder pStringBuilder) {
         pStringBuilder.append("{")
                 .append("\n")
-                .append(mPrefix)
+                .append(PREFIX)
                 .append(createIndent(pIndentNum));
 
         Iterator<String> keys = pJsonObject.keys();
@@ -83,9 +85,9 @@ public class JsonFormatter {
             String endFix;
 
             if (keys.hasNext()) {
-                endFix = "," + "\n" + mPrefix + createIndent(pIndentNum);
+                endFix = "," + "\n" + PREFIX + createIndent(pIndentNum);
             } else {
-                endFix = "\n" + mPrefix;
+                endFix = "\n" + PREFIX;
             }
 
             try {

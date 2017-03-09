@@ -5,8 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.Arrays;
 import java.util.HashMap;
-
-import pers.nelon.wtflogger.i.ITagNext;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,42 +26,26 @@ public class MainActivity extends AppCompatActivity {
                 "\t<body>Don't forget the meeting!</body>\n" +
                 "</note> \n";
 
-        final HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
-        objectObjectHashMap.put(1, 45);
-        objectObjectHashMap.put("asdas", this);
-        objectObjectHashMap.put("va", "avad");
+        HashMap map = new HashMap<>();
+        map.put("name", "nelon");
+        map.put("age", 18);
 
+        List list = Arrays.asList(1, 1f, "item 3");
 
-        for (int i = 0; i < 20; i++) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    ITagNext tagNext = WtfLog.i.tag("test")
-                            .msg("他们用自己喜欢的方式,带着喜欢的人,用喜欢的节奏,和一群喜欢摩托旅行的大家庭开始了这次的海南环岛之旅。")
-                            .stackTrace()
-                            .date()
-                            .json(json)
-                            .threadInfo()
-                            .stackTrace()
-                            .key("int key").intVal(233)
-                            .key("float").floatVal(1.654545f);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException pE) {
-                        pE.printStackTrace();
-                    }
+        WtfLog.i.tag("WtfLog")
+                .msg("Easy log with WtfLog !")
+                .date()
+                .threadInfo()
+                .stackTrace()
+                .json(json)
+                .xml(xml)
+                .key("int").intVal(255)
+                .key("hex int").hexVal(255)
+                .key("hex int").binVal(255)
+                .key("map").mapVal(map)
+                .key("list").listVal(list)
+                .print();
 
-                    tagNext.key("hex").hexVal(45)
-                            .key("bin").binVal(878)
-                            .key("array").arrayVal(new Integer[]{11, 2, 5, 3, 8, 4})
-                            .key("list").listVal(Arrays.asList(124, "qweqw,", 124, "afaf"))
-                            .xml(xml)
-                            .key("map").mapVal(objectObjectHashMap)
-                            .print();
-
-                }
-            }).start();
-        }
     }
 
 

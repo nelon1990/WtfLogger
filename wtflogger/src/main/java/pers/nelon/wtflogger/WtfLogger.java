@@ -56,7 +56,7 @@ public class WtfLogger implements
 
     @Override
     public ITagNext tag(String pTag) {
-        mTagLocal.set(pTag);
+        mTagLocal.set("wtflog-"+pTag);
         return this;
     }
 
